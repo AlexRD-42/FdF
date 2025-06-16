@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 10:24:50 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/13 12:25:56 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/06/16 18:40:38 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,6 @@ void	ft_mlx_destroy(t_xvar *mlx, t_img *img)
 	mlx_destroy_image(mlx, img);
 	mlx_destroy_display(mlx);
 	free(mlx);
-}
-
-static
-ssize_t	ft_read(char *buffer)
-{
-	ssize_t	bytes_read;
-
-	int fd = open("resources/maps/42.fdf", O_RDONLY);
-	bytes_read = read(fd, buffer, 4096);
-	close(fd);
-	return (bytes_read);
 }
 
 static

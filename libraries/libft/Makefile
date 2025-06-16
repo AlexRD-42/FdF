@@ -10,7 +10,7 @@ float_math.c int_limits.c int_math.c int_primes.c int_range.c \
 str_basic.c char_bools.c str_bools.c str_copy.c str_find.c str_join.c str_operations.c str_utils.c \
 array_sort.c list_utils.c rng.c
 # Flags --------------------------------------- #
-CC = cc -Wall -Wextra $(addprefix -I,$(INC_PATH)) -flto=auto -fstrict-aliasing
+CC = gcc-13 -Wall -Wextra $(addprefix -I,$(INC_PATH)) -flto=auto -fstrict-aliasing
 DEBUG = -g -Wpedantic -Wcast-qual -Wfloat-equal -Wsign-conversion -Wswitch-default -Wduplicated-branches -Wduplicated-cond 
 SANITIZERS = -fsanitize=address,undefined,leak -fno-omit-frame-pointer
 FAST = -march=native -O3 -ffast-math
