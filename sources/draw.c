@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf_draw.c                                         :+:      :+:    :+:   */
+/*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 15:32:44 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/25 17:47:48 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/06/26 17:31:13 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	dline_float(t_img *img, t_vtx p0, t_vtx p1)
 	while (i <= length)
 	{
 		if (vector.x > 0 && vector.y > 0 && vector.x < WIDTH && vector.y < HEIGHT)
-			cmlx_putrgb(img, vector.x, vector.y, 0xFFFFFF);
+			cmlx_putrgb(img, vector.x, vector.y, p0.color);
 		vector.x += dx;
 		vector.y += dy;
 		i++;

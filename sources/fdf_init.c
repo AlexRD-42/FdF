@@ -6,12 +6,14 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:13:44 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 16:13:51 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/06/26 19:42:46 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "fdf.h"
 
 void	fdf_create_vector(t_vars *vars)
@@ -42,8 +44,8 @@ void	fdf_hooks(t_vars *vars)
 	mlx_hook(window, KeyRelease, KeyReleaseMask, cmlx_keyup, vars);
 	mlx_hook(window, ButtonPress, ButtonPressMask, cmlx_mousedown, vars);
 	mlx_hook(window, ButtonRelease, ButtonReleaseMask, cmlx_mouseup, vars);
-	mlx_hook(window, Expose, ExposureMask, cmlx_expose, vars);
-	mlx_loop_hook(vars->mlx, cmlx_loop, vars);
+	mlx_hook(window, MotionNotify, PointerMotionMask, cmlx_mousemove, vars);
+	mlx_loop_hook(vars->mlx, render_frame, vars);
 }
 
 void	fdf_clear_params(t_vars *vars)

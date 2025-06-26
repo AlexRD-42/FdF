@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:14:04 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 12:52:21 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/06/26 18:18:51 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,29 @@ typedef struct s_frustrum
 	float	ar;		// Aspect Ratio
 }	t_frustrum;
 
-typedef struct s_event_status
+typedef struct s_keys
 {
-	uint8_t	alt_pressed;
-}	t_evstatus;
+	uint8_t	w;
+	uint8_t	a;
+	uint8_t	s;
+	uint8_t	d;
+	uint8_t	q;
+	uint8_t	e;
+	uint8_t	up;
+	uint8_t	down;
+	uint8_t	left;
+	uint8_t	right;
+	uint8_t	rmb;
+	uint8_t	lmb;
+}	t_keys;
+
+typedef struct s_mouse
+{
+	int32_t	x0;
+	int32_t	y0;
+	int32_t	x1;
+	int32_t	y1;
+}	t_mouse;
 
 typedef struct s_vars
 {
@@ -54,7 +73,8 @@ typedef struct s_vars
 	int32_t		min;
 	uint32_t	rows;
 	uint32_t	cols;
-	t_evstatus	evstatus;
+	t_keys		keys;
+	t_mouse		mouse;
 }	t_vars;
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:58:18 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 15:57:55 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/06/26 19:34:23 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,10 @@ void	fdf_create_vector(t_vars *vars);
 void	cmlx_putrgb(t_img *img, uint32_t x, uint32_t y, uint32_t argb);
 void	cmlx_destroy(t_vars *vars);
 
-int		cmlx_loop(t_vars *vars);
+int		render_frame(t_vars *vars);
 int 	cmlx_keydown(int keycode, t_vars *vars);
 int 	cmlx_keyup(int keycode, t_vars *vars);
 int 	cmlx_mousedown(int button, int x, int y, t_vars *vars);
 int 	cmlx_mouseup(int button, int x, int y, t_vars *vars);
-int 	cmlx_expose(t_vars *vars);
-
+int 	cmlx_mousemove(int32_t ix, int32_t iy, t_vars *vars);
 #endif
