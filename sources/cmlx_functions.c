@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 15:20:22 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/25 11:06:13 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:08:14 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,9 @@ void	cmlx_destroy(t_vars *vars)
 	mlx_destroy_image(vars->mlx, vars->img);
 	mlx_destroy_display(vars->mlx);
 	free(vars->mlx);
-	free(vars->vtx); // This already frees vec
+	free(vars->vtx);
 	vars->vec = NULL;
 	vars->mlx = NULL;
 	vars->vtx = NULL;
+	vars->img = NULL;
 }

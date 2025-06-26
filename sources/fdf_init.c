@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:13:44 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 13:24:52 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:13:51 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,21 @@ void	fdf_create_vector(t_vars *vars)
 	}
 }
 
-void	init_vars(t_vars *vars)
+static
+void	fdf_hooks(t_vars *vars)
+{
+	t_win_list	*window;
+
+	window = vars->mlx->win_list;
+	mlx_hook(window, KeyPress, KeyPressMask, cmlx_keydown, vars);
+	mlx_hook(window, KeyRelease, KeyReleaseMask, cmlx_keyup, vars);
+	mlx_hook(window, ButtonPress, ButtonPressMask, cmlx_mousedown, vars);
+	mlx_hook(window, ButtonRelease, ButtonReleaseMask, cmlx_mouseup, vars);
+	mlx_hook(window, Expose, ExposureMask, cmlx_expose, vars);
+	mlx_loop_hook(vars->mlx, cmlx_loop, vars);
+}
+
+void	fdf_clear_params(t_vars *vars)
 {
 	vars->params.rx = 0.0f;
 	vars->params.ry = 0.0f;
@@ -40,11 +54,45 @@ void	init_vars(t_vars *vars)
 	vars->params.dx = 0.0f;
 	vars->params.dy = 0.0f;
 	vars->params.dz = 0.0f;
-	vars->mlx = NULL;
+}
+
+static
+uint8_t	cmlx_error(t_vars *vars, uint8_t error_code)
+{
+	write(2, "Error: MLX Failure\n", 19);
+	free(vars->vtx);
 	vars->vtx = NULL;
-	fdf_read("archive/maps/elem2.fdf", " \n", vars);
-	fdf_create_vector(vars);
+	if (error_code == 1)
+	{
+		mlx_destroy_display(vars->mlx);
+		free(vars->mlx);		
+	}
+	else if (error_code == 2)
+	{
+		mlx_destroy_image(vars->mlx, vars->img);
+		mlx_destroy_display(vars->mlx);
+		free(vars->mlx);
+	}
+	vars->mlx = NULL;
+	vars->img = NULL;
+	return (1);
+}
+
+uint8_t	fdf_init(t_vars *vars, const char *filename, const char *charset)
+{
+	if (fdf_read(vars, filename, charset))
+		return (1);
 	vars->mlx = mlx_init();
-	mlx_new_window(vars->mlx, WIDTH, HEIGHT, "Hello world!");
+	if (vars->mlx == NULL)
+		return (cmlx_error(vars, 0));
 	vars->img = mlx_int_new_image(vars->mlx, WIDTH, HEIGHT, ZPixmap);
+	if (vars->img == NULL)
+		return (cmlx_error(vars, 1));
+	mlx_new_window(vars->mlx, WIDTH, HEIGHT, "Fildefer");
+	if (vars->mlx->win_list == NULL)
+		return (cmlx_error(vars, 2));
+	fdf_hooks(vars);
+	fdf_clear_params(vars);
+	fdf_create_vector(vars);
+	return (0);
 }

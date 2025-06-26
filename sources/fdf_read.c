@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:11:54 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 13:21:13 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/06/26 15:27:45 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,20 @@
 #include "libft.h"
 #include "fdf.h"
 
-// Remember to free and close fds
-// Maybe an Enum would be better
-// static const char *error[] = {
-// 	"Error: Number of columns differ",
-// 	"Error: Failed to allocate memory",
-// 	"Error: Read values do not match",};
-
-void	fdf_error(t_vars *vars, uint8_t error_code, int32_t fd)
+static
+uint8_t	fdf_error(uint8_t error_code, int32_t fd, void *ptr1, void *ptr2)
 {
-	
+	if (error_code == 0)
+		write(2, "Error: Read failure\n", 20);
+	if (error_code == 1)
+		write(2, "Error: Failed to allocate memory\n", 33);
+	if (error_code == 2)
+		write(2, "Error: Rows and Cols mismatch\n", 30);
+	free(ptr1);
+	free(ptr2);
+	if (fd > 0)
+		close(fd);
+	return (1);
 }
 
 static
@@ -84,12 +88,11 @@ t_vtx	*fdf_split(const char *str, const char *charset, size_t *count)
 		(*count)++;
 		ustr += length;
 	}
-	*count *= (*count == tokens);
 	return (array);
 }
 
 static
-void	fdf_read_init(const char *str, const char c, t_vars *vars)
+uint8_t	fdf_read_init(const char *str, const char c, t_vars *vars)
 {
 	size_t			i;
 	int32_t			y_index;
@@ -98,7 +101,7 @@ void	fdf_read_init(const char *str, const char c, t_vars *vars)
 	while (*str != 0)
 		vars->rows += (*str++ == c);
 	if (vars->rows == 0 || vars->length % vars->rows != 0)
-		return (fdf_error(vars, 3, -1)); // Error Handling
+		return (1);
 	vars->cols = vars->length / vars->rows;
 	vars->min = INT32_MAX;
 	vars->max = INT32_MIN;
@@ -107,18 +110,17 @@ void	fdf_read_init(const char *str, const char c, t_vars *vars)
 	y_index = 0;
 	while (i < vars->length)
 	{
-		if (vars->vtx[i].z > vars->max)	// This is dumb
-			vars->max = vars->vtx[i].z;
-		if (vars->vtx[i].z < vars->min)	// This is dumb
-			vars->min = vars->vtx[i].z;
+		vars->max = ft_imax(vars->vtx[i].z, vars->max);
+		vars->min = ft_imin(vars->vtx[i].z, vars->min);
 		vars->vtx[i].x = (vars->vtx[i].x % vars->cols);
 		y_index += (vars->vtx[i].x == 0) && (i != 0);
 		vars->vtx[i].y = y_index;
 		i++;
 	}
+	return (0);
 }
 
-void	fdf_read(const char *filename, const char *charset, t_vars *vars)
+uint8_t	fdf_read(t_vars *vars, const char *filename, const char *charset)
 {
 	char			*buffer;
 	size_t			bytes_read;
@@ -126,19 +128,21 @@ void	fdf_read(const char *filename, const char *charset, t_vars *vars)
 	const int32_t	fd = open(filename, O_RDONLY);
 
 	if ((ssize_t) total_memory <= 0 || fd < 0)
-		return (fdf_error(vars, 0, fd)); // Error Handling
+		return (fdf_error(0, fd, NULL, NULL));
 	buffer = malloc(total_memory + 1);
 	if (buffer == NULL)
-		return (fdf_error(vars, 1, fd)); // Error Handling
+		return (fdf_error(1, fd, NULL, NULL));
 	bytes_read = (size_t) read(fd, buffer, total_memory);
 	if ((ssize_t) bytes_read <= 0 || bytes_read != total_memory)
-		return (fdf_error(vars, 0, fd)); // Error Handling
+		return (fdf_error(0, fd, buffer, NULL));
 	buffer[bytes_read] = 0;
 	vars->vtx = fdf_split(buffer, charset, &(vars->length));
-	if (vars->vtx == NULL || vars->length == 0)
-		return (fdf_error(vars, 1, fd));
+	if (vars->vtx == NULL)
+		return (fdf_error(1, fd, buffer, NULL));
 	vars->vec = (t_vec4 *) (vars->vtx + vars->length);
-	fdf_read_init(buffer, '\n', vars);
+	if (fdf_read_init(buffer, '\n', vars))
+		return (fdf_error(2, fd, buffer, vars->vtx));
 	free(buffer);
 	close(fd);
+	return (0);
 }

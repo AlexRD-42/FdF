@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:58:18 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 12:56:32 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/06/26 15:57:55 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@
 # define ZSCALE 0.3f
 # define DEFAULT_ZOOM 1.0f
 
-void	fdf_read(const char *str, const char *charset, t_vars *vars);
-void	fdf_create_vector(t_vars *vars);
-void	fdf_error(t_vars *vars, uint8_t error_code, int32_t fd);
+uint8_t	fdf_read(t_vars *vars, const char *filename, const char *charset);
+
 void	draw_lines(t_vars *vars);
 void	apply_vertex(t_vars *vars, t_vec4 *v);
-
+uint8_t	fdf_init(t_vars *vars, const char *filename, const char *charset);
+void	fdf_create_vector(t_vars *vars);
 void	cmlx_putrgb(t_img *img, uint32_t x, uint32_t y, uint32_t argb);
 void	cmlx_destroy(t_vars *vars);
 

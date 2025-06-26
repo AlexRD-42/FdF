@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 09:34:26 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 13:22:12 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/06/26 13:31:01 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int cmlx_keyup(int keycode, t_vars *vars)
 // 12345 = LMB MMB RMB WHEELUP WHEELDOWN
 int cmlx_mousedown(int button, int32_t ix, int32_t iy, t_vars *vars)
 {
-
 	if (button == 4)
 		vars->zoom += 0.1f;
 	else if (button == 5)
