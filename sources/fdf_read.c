@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:11:54 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 11:52:45 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 13:35:54 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ t_vtx	fdf_atoi(const uint8_t *ustr, size_t index)
 		while (lut[*ustr] || *ustr == '0')
 			vtx.color = (vtx.color << 4) + lut[*ustr++];
 	}
+	else
+		vtx.color = 0xFFFFFF;
 	return (vtx);
 }
 

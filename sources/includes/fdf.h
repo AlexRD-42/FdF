@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:58:18 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 12:09:58 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 13:54:09 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ uint8_t	fdf_read(t_vars *vars, const char *filename, const char *charset);
 uint8_t	fdf_init(t_vars *vars, const char *filename, const char *charset);
 void	fdf_create_vector(t_vars *vars);
 void	fdf_render_frame(t_vars *vars);
-void	fdf_reset_params(t_vars *vars);
+void	fdf_preset1(t_vars *vars);
 
 int		cmlx_loop(t_vars *vars);
 int		cmlx_keydown(int keycode, t_vars *vars);

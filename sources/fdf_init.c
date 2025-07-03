@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:13:44 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 12:28:51 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 13:53:47 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,19 @@ uint8_t	cmlx_error(t_vars *vars, uint8_t error_code)
 	return (1);
 }
 
+static
+void	fdf_reset_params(t_vars *vars)
+{
+	vars->params.rx = PI / 6;
+	vars->params.ry = 0.0f;
+	vars->params.rz = -PI / 6;
+	vars->params.dx = 0.0f;
+	vars->params.dy = 0.0f;
+	vars->params.dz = 0.0f;
+	vars->params.zoom = 0.5f;
+	vars->params.zscale = 1.0f;
+}
+
 void	fdf_create_vector(t_vars *vars)
 {
 	size_t		i;
@@ -68,18 +81,6 @@ void	fdf_create_vector(t_vars *vars)
 		vars->vec[i].w = 0.0f;
 		i++;
 	}
-}
-
-void	fdf_reset_params(t_vars *vars)
-{
-	vars->params.rx = PI / 4;
-	vars->params.ry = 0.0f;
-	vars->params.rz = -PI / 4;
-	vars->params.dx = 0.0f;
-	vars->params.dy = 0.0f;
-	vars->params.dz = 0.0f;
-	vars->params.zoom = 0.5f;
-	vars->params.zscale = 1.0f;
 }
 
 uint8_t	fdf_init(t_vars *vars, const char *filename, const char *charset)
