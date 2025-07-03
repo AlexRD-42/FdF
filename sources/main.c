@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 10:24:50 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 13:34:34 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:49:22 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ int	main(int argc, char **argv)
 {
 	t_vars	vars;
 
-	if (argc != 2)
-		return (1);
-	// if (fdf_init(&vars, "archive/maps/t2.fdf", " \n"))
+	// if (argc != 2)
 	// 	return (1);
-	if (fdf_init(&vars, argv[1], " \n"))
+	if (fdf_init(&vars, "archive/maps/t2.fdf", " \n"))
 		return (1);
+	// if (fdf_init(&vars, argv[1], " \n"))
+	// 	return (1);
 	mlx_destroy_window(vars.mlx, vars.mlx->win_list);
 	mlx_destroy_image(vars.mlx, vars.img);
 	mlx_destroy_display(vars.mlx);

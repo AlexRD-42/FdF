@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:13:44 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 13:53:47 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:59:21 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,21 @@ void	fdf_reset_params(t_vars *vars)
 	vars->params.dz = 0.0f;
 	vars->params.zoom = 0.5f;
 	vars->params.zscale = 1.0f;
+	vars->keys.rmb = 0;
+	vars->keys.lmb = 0;
+	vars->keys.w = 0;
+	vars->keys.a = 0;
+	vars->keys.s = 0;
+	vars->keys.d = 0;
+	vars->keys.q = 0;
+	vars->keys.e = 0;
+	vars->keys.up = 0;
+	vars->keys.down = 0;
+	vars->keys.left = 0;
+	vars->keys.right = 0;
+	vars->rot.x = 0.0f;
+	vars->rot.y = 0.0f;
+	vars->rot.z = 0.0f;
 }
 
 void	fdf_create_vector(t_vars *vars)
@@ -70,7 +85,7 @@ void	fdf_create_vector(t_vars *vars)
 	size_t		i;
 	const float	invx = 2.0f / (vars->cols - 1);
 	const float	invy = 2.0f / (vars->rows - 1);
-	const float	invz = 2.0f / (vars->max - vars->min);
+	const float	invz = 2.0f / (vars->max - vars->min + 1);
 
 	i = 0;
 	while (i < vars->length)

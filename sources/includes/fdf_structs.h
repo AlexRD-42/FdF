@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:14:04 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 13:51:07 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:58:53 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct s_vars
 	t_img		*img;
 	t_vtx		*vtx;
 	t_vec4		*vec;
+	t_vec3		rot;
 	t_params	params;
 	size_t		length;
 	int32_t		max;

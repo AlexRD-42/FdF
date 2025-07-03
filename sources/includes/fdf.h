@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:58:18 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 13:54:09 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:57:42 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,19 @@
 # include "cmlx.h"
 # include "fdf_structs.h"
 
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIDTH 1600
+# define HEIGHT 900
 
 uint8_t	fdf_read(t_vars *vars, const char *filename, const char *charset);
 uint8_t	fdf_init(t_vars *vars, const char *filename, const char *charset);
 void	fdf_create_vector(t_vars *vars);
 void	fdf_render_frame(t_vars *vars);
+void	draw_neighbours(t_vars *vars, size_t row, size_t col);
+
 void	fdf_preset1(t_vars *vars);
+void	fdf_preset2(t_vars *vars);
+void	fdf_preset3(t_vars *vars);
+void	fdf_preset4(t_vars *vars);
 
 int		cmlx_loop(t_vars *vars);
 int		cmlx_keydown(int keycode, t_vars *vars);

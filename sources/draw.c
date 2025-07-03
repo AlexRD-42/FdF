@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 15:32:44 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 11:58:38 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:57:28 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	dline_float(t_img *img, t_vtx p0, t_vtx p1)
 	}
 }
 
-static
 void	draw_neighbours(t_vars *vars, size_t row, size_t col)
 {
 	t_vtx			p0;
@@ -70,53 +69,4 @@ void	draw_neighbours(t_vars *vars, size_t row, size_t col)
 		p1.color = vars->vtx[index[1]].color;
 		dline_float(vars->img, p0, p1);
 	}
-}
-
-static
-void	apply_transform(t_vars *vars, t_vec4 *v, t_params params)
-{
-	size_t			i;
-	t_vec3			tmp;
-	const t_vec3	vcos = {cosf(params.rx), cosf(params.ry), cosf(params.rz)};
-	const t_vec3	vsin = {sinf(params.rx), sinf(params.ry), sinf(params.rz)};
-	const t_mat4	mat = {{
-	{vcos.z * vcos.y, -vsin.z * vcos.y, vsin.y, params.dx},
-	{vcos.z * vsin.y * vsin.x + vsin.z * vcos.x, -vsin.z * vsin.y * vsin.x
-		+ vcos.z * vcos.x, -vcos.y * vsin.x, params.dy},
-	{-vcos.z * vsin.y * vcos.x + vsin.z * vsin.x, vsin.z * vsin.y * vcos.x
-		+ vcos.z * vsin.x, vcos.y * vcos.x, params.dz},
-	{0, 0, 0, 1}}};
-
-	i = 0;
-	while (i < vars->length)
-	{
-		tmp.x = mat.a1 * v[i].x + mat.a2 * v[i].y + mat.a3 * v[i].z + mat.a4;
-		tmp.y = mat.b1 * v[i].x + mat.b2 * v[i].y + mat.b3 * v[i].z + mat.b4;
-		tmp.z = mat.c1 * v[i].x + mat.c2 * v[i].y + mat.c3 * v[i].z + mat.c4;
-		v[i].x = tmp.x;
-		v[i].y = tmp.y;
-		v[i].z = tmp.z;
-		i++;
-	}
-}
-
-void	fdf_render_frame(t_vars *vars)
-{
-	size_t	row;
-	size_t	col;
-
-	ft_bzero(vars->img->data, HEIGHT * WIDTH * sizeof(int32_t));
-	apply_transform(vars, vars->vec, vars->params);
-	row = 0;
-	while (row < vars->rows)
-	{
-		col = 0;
-		while (col < vars->cols)
-		{
-			draw_neighbours(vars, row, col);
-			col++;
-		}
-		row++;
-	}
-	mlx_put_image_to_window(vars->mlx, vars->mlx->win_list, vars->img, 0, 0);
 }

@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 12:51:33 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 11:59:27 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:58:42 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,3 +182,4 @@ typedef struct s_frustrum
 
 // 	total *= (dxyz + 0.5);
 // }
+

@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 09:34:26 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 14:09:07 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:09:40 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,18 @@ int	cmlx_keydown(int keycode, t_vars *vars)
 		return (mlx_loop_end(vars->mlx));
 	if (keycode == XK_r)
 		fdf_create_vector(vars);
+	if (keycode == XK_1)
+		fdf_preset1(vars);
+	if (keycode == XK_2)
+		fdf_preset2(vars);
+	if (keycode == XK_3)
+		fdf_preset3(vars);
+	if (keycode == XK_4)
+		fdf_preset4(vars);
 	vars->keys.w = (keycode == XK_w);
 	vars->keys.a = (keycode == XK_a);
 	vars->keys.s = (keycode == XK_s);
 	vars->keys.d = (keycode == XK_d);
-	if (keycode == XK_1)
-		fdf_preset1(vars);
 	vars->keys.q = (keycode == XK_q);
 	vars->keys.e = (keycode == XK_e);
 	vars->keys.up = (keycode == XK_Up);
