@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:13:44 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 19:42:46 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 12:28:51 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "fdf.h"
-
-void	fdf_create_vector(t_vars *vars)
-{
-	size_t		i;
-	const float	invx = 2.0f / vars->cols;
-	const float	invy = 2.0f / vars->rows;
-	const float	invz = 2.0f / (vars->max - vars->min);
-
-	i = 0;
-	while (i < vars->length)
-	{
-		vars->vec[i].x = vars->vtx[i].x * invx - 1.0f;
-		vars->vec[i].y = vars->vtx[i].y * invy - 1.0f;
-		vars->vec[i].z = (vars->vtx[i].z - vars->min) * invz - 1.0f;
-		vars->vec[i].w = vars->vtx[i].color;
-		i++;
-	}
-}
 
 static
 void	fdf_hooks(t_vars *vars)
@@ -45,17 +27,7 @@ void	fdf_hooks(t_vars *vars)
 	mlx_hook(window, ButtonPress, ButtonPressMask, cmlx_mousedown, vars);
 	mlx_hook(window, ButtonRelease, ButtonReleaseMask, cmlx_mouseup, vars);
 	mlx_hook(window, MotionNotify, PointerMotionMask, cmlx_mousemove, vars);
-	mlx_loop_hook(vars->mlx, render_frame, vars);
-}
-
-void	fdf_clear_params(t_vars *vars)
-{
-	vars->params.rx = 0.0f;
-	vars->params.ry = 0.0f;
-	vars->params.rz = 0.0f;
-	vars->params.dx = 0.0f;
-	vars->params.dy = 0.0f;
-	vars->params.dz = 0.0f;
+	mlx_loop_hook(vars->mlx, cmlx_loop, vars);
 }
 
 static
@@ -67,7 +39,7 @@ uint8_t	cmlx_error(t_vars *vars, uint8_t error_code)
 	if (error_code == 1)
 	{
 		mlx_destroy_display(vars->mlx);
-		free(vars->mlx);		
+		free(vars->mlx);
 	}
 	else if (error_code == 2)
 	{
@@ -78,6 +50,36 @@ uint8_t	cmlx_error(t_vars *vars, uint8_t error_code)
 	vars->mlx = NULL;
 	vars->img = NULL;
 	return (1);
+}
+
+void	fdf_create_vector(t_vars *vars)
+{
+	size_t		i;
+	const float	invx = 2.0f / (vars->cols - 1);
+	const float	invy = 2.0f / (vars->rows - 1);
+	const float	invz = 2.0f / (vars->max - vars->min);
+
+	i = 0;
+	while (i < vars->length)
+	{
+		vars->vec[i].x = vars->vtx[i].x * invx - 1.0f;
+		vars->vec[i].y = vars->vtx[i].y * invy - 1.0f;
+		vars->vec[i].z = (vars->vtx[i].z - vars->min) * invz - 1.0f;
+		vars->vec[i].w = 0.0f;
+		i++;
+	}
+}
+
+void	fdf_reset_params(t_vars *vars)
+{
+	vars->params.rx = PI / 4;
+	vars->params.ry = 0.0f;
+	vars->params.rz = -PI / 4;
+	vars->params.dx = 0.0f;
+	vars->params.dy = 0.0f;
+	vars->params.dz = 0.0f;
+	vars->params.zoom = 0.5f;
+	vars->params.zscale = 1.0f;
 }
 
 uint8_t	fdf_init(t_vars *vars, const char *filename, const char *charset)
@@ -94,7 +96,8 @@ uint8_t	fdf_init(t_vars *vars, const char *filename, const char *charset)
 	if (vars->mlx->win_list == NULL)
 		return (cmlx_error(vars, 2));
 	fdf_hooks(vars);
-	fdf_clear_params(vars);
+	fdf_reset_params(vars);
 	fdf_create_vector(vars);
+	mlx_loop(vars->mlx);
 	return (0);
 }

@@ -1,12 +1,13 @@
 # Configuration ------------------------------- #
-NAME = main
-INC_PATH = sources/includes libraries/mlx ../libft/sources/includes
+NAME = main ######################### CHANGE THIS
+INC_PATH = sources/includes libraries/mlx
 OBJ_PATH = sources/obj
-VPATH = sources
+VPATH = sources sources/utils
 
 # Files --------------------------------------- #
-LIBS = libraries/mlx/libmlx_Linux.a ../libft/libft.a
-SRCS = main.c fdf_init.c fdf_read.c events_key.c events_mouse.c euler.c draw.c custom_mlx.c
+LIBS = libraries/mlx/libmlx_Linux.a
+SRCS = main.c fdf_init.c fdf_read.c events.c draw.c \
+float_limits.c int_limits.c read_utils.c
 
 # Flags --------------------------------------- #
 CC = gcc-13

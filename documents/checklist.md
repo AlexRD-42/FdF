@@ -9,6 +9,8 @@ Add a default color if unspecified (could be white or equal to the negative of t
 Linearly interpolate colors between vtx p0 and vtx p1 in draw lines
 
 # Pre-compute neighbour pairs for better cache prediction and eliminate branching
+But the slope of the line should be preseved when clamping
+If all points are outside of the draw region, no-op
 
 # Implement anti-aliasing
 # Implement motion smoothing

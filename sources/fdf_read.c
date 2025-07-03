@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:11:54 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 19:34:02 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 11:52:45 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include "libft.h"
+#include "fdf_utils.h"
 #include "fdf.h"
 
 static
@@ -68,9 +68,10 @@ t_vtx	*fdf_split(const char *str, const char *charset, size_t *count)
 	t_vtx			*array;
 	size_t			length;
 	uint8_t			lut[256];
+	size_t			tokens;
 	const uint8_t	*ustr = (const uint8_t *) str;
-	const size_t	tokens = ft_count_tokens(str, ft_setlut256(lut, charset), NULL);
 
+	tokens = ft_count_tokens(str, ft_setlut256(lut, charset), NULL);
 	array = malloc(tokens * (sizeof(t_vtx) + sizeof(t_vec4)));
 	if (array == NULL)
 		return (NULL);
@@ -97,15 +98,15 @@ uint8_t	fdf_read_init(const char *str, const char c, t_vars *vars)
 	size_t			i;
 	int32_t			y_index;
 
-	vars->rows = 0;
+	vars->rows = 1;
 	while (*str != 0)
 		vars->rows += (*str++ == c);
+	vars->rows -= vars->rows != 1 && str[-1] == c;
 	if (vars->rows == 0 || vars->length % vars->rows != 0)
 		return (1);
 	vars->cols = vars->length / vars->rows;
 	vars->min = INT32_MAX;
 	vars->max = INT32_MIN;
-	vars->zoom = DEFAULT_ZOOM;
 	i = 0;
 	y_index = 0;
 	while (i < vars->length)
@@ -139,7 +140,7 @@ uint8_t	fdf_read(t_vars *vars, const char *filename, const char *charset)
 	vars->vtx = fdf_split(buffer, charset, &(vars->length));
 	if (vars->vtx == NULL)
 		return (fdf_error(1, fd, buffer, NULL));
-	vars->vec = (t_vec4 *) (vars->vtx + vars->length);
+	vars->vec = (t_vec4 *)(vars->vtx + vars->length);
 	if (fdf_read_init(buffer, '\n', vars))
 		return (fdf_error(2, fd, buffer, vars->vtx));
 	free(buffer);

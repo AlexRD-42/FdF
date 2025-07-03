@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 12:51:22 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 12:55:55 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 11:08:35 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,6 @@
 # endif
 
 # define PI 3.141592653589793238462643383279502884L
-
-typedef union u_argb
-{
-	uint32_t	argb;
-	struct
-	{
-		uint8_t	a;
-		uint8_t	r;
-		uint8_t	g;
-		uint8_t	b;
-	};
-}	t_argb;
 
 typedef struct s_vertex
 {

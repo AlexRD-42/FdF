@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 12:51:33 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 12:59:37 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 11:59:27 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,32 @@
 #include <math.h>
 #include "libft.h"
 #include "fdf.h"
+
+// Calculate a gradient that goes from p0 to p1 color (Alpha goes from 00 to FF basically)
+// Everything here should be an integer, floats should only be used to determine p0.X -> p1.X by scaling to display
+// This function should receive integer points, other function responsability to determine this
+
+// Could pre-compute neighbour pairs for better cache prediction and eliminate branching
+// Total number of pairs = (rows - 1) * cols + (cols - 1) * rows
+// = 2 rows*cols - rows - cols
+                        ((uint32_t (*)[img->width])img->data) [(uint32_t)vector.y][(uint32_t)vector.x] = p0.color;
+
+
+inline
+void	cmlx_putargb(t_img *img, uint32_t x, uint32_t y, uint32_t src)
+{
+	uint32_t		*dst;
+	const uint32_t	alpha = src >> 24;
+	uint32_t		rb_dst; 
+	uint32_t		ga_dst;
+
+	dst = (uint32_t *) (img->data + y * img->width + x);
+	rb_dst = *dst & 0x00FF00FF;
+	ga_dst = (*dst >> 8) & 0x00FF00FF;
+	rb_dst += (((src & 0x00FF00FF) - rb_dst) * alpha) >> 8;
+	ga_dst += ((((src >> 8) & 0x00FF00FF) - ga_dst) * alpha) >> 8;
+	*dst = (rb_dst & 0x00FF00FF) | ((ga_dst & 0x00FF00FF) << 8);
+}
 
 static inline
 t_mat4	build_mvpmatrix(t_params p, t_frustrum f)
@@ -132,6 +158,14 @@ void	cmlx_putargb(t_img *img, uint32_t x, uint32_t y, uint32_t src)
 	reg64 = ((reg64 >> 32) | reg64) & 0xFFFFFFFFULL;
 	*dst = (uint32_t) reg64;
 }
+
+typedef struct s_frustrum
+{
+	float	near;	// Near z plane camera
+	float	far;	// Far z plane camera
+	float	fov;	// Field of view
+	float	ar;		// Aspect Ratio
+}	t_frustrum;
 
 
 // dp how many pixels changed

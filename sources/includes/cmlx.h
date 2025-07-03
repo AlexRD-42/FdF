@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 12:25:37 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 13:26:12 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 11:46:45 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ typedef struct s_xvar
 	int			decrgb[6];
 	Atom		wm_delete_window;
 	Atom		wm_protocols;
-	int 		end_loop;
+	int			end_loop;
 }				t_xvar;
 
 void	*mlx_int_new_image(t_xvar *xvar, int width, int height, int format);

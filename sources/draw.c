@@ -6,82 +6,107 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 15:32:44 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/06/26 17:31:13 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/03 11:58:38 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <fcntl.h>
 #include <math.h>
-#include "libft.h"
+#include "fdf_utils.h"
 #include "fdf.h"
 
-// Calculate a gradient that goes from p0 to p1 color (Alpha goes from 00 to FF basically)
-// Everything here should be an integer, floats should only be used to determine p0.X -> p1.X by scaling to display
-// This function should receive integer points, other function responsability to determine this
+static inline
+void	putrgb(t_img *img, uint32_t x, uint32_t y, uint32_t argb)
+{
+	((uint32_t (*)[img->width])img->data)[y][x] = argb;
+}
+
 static
 void	dline_float(t_img *img, t_vtx p0, t_vtx p1)
 {
-	const uint32_t	length = ft_imax(ft_iabs((p1.x - p0.x)), ft_iabs((p1.y - p0.y)));
-	const float		dx = (double) (p1.x - p0.x) / (double) length;
-	const float		dy = (double) (p1.y - p0.y) / (double) length;
+	const uint32_t	length = ft_iabsmax((p1.x - p0.x), (p1.y - p0.y));
+	const float		dx = (double)(p1.x - p0.x) / (double)length;
+	const float		dy = (double)(p1.y - p0.y) / (double)length;
 	uint32_t		i;
-	t_vec2			vector;
+	t_vec2			vec;
 
 	i = 0;
-	vector.x = p0.x;
-	vector.y = p0.y;
+	vec.x = p0.x;
+	vec.y = p0.y;
 	while (i <= length)
 	{
-		if (vector.x > 0 && vector.y > 0 && vector.x < WIDTH && vector.y < HEIGHT)
-			cmlx_putrgb(img, vector.x, vector.y, p0.color);
-		vector.x += dx;
-		vector.y += dy;
+		if (vec.x >= 0.0f && vec.y >= 0.0f && vec.x < WIDTH && vec.y < HEIGHT)
+			putrgb(img, vec.x, vec.y, p0.color);
+		vec.x += dx;
+		vec.y += dy;
 		i++;
 	}
 }
 
-// Clamping should occur in draw line
-// It is acceptable for the image to have pairs that are outside of the drawing region
-// But the slope of the line should be preseved when clamping
-// If all points are outside of the draw region, no-op
 static
 void	draw_neighbours(t_vars *vars, size_t row, size_t col)
 {
-	t_vtx	p0;
-	t_vtx	p1;
-	t_vec4 	(*vector)[vars->cols] = (t_vec4 (*)[vars->cols])vars->vec;
-	t_vtx 	(*vertex)[vars->cols] = (t_vtx (*)[vars->cols])vars->vtx;
+	t_vtx			p0;
+	t_vtx			p1;
+	const float		s[2] = {0.5f * WIDTH * vars->params.zoom,
+		0.5f * HEIGHT * vars->params.zoom};
+	const uintptr_t	offset = row * vars->cols + col;
+	const uintptr_t	index[2] = {offset + 1, offset + vars->cols};
 
-	p0.x = (vector[row][col].x + 1.0f) * 0.5f * WIDTH * vars->zoom;
-	p0.y = (vector[row][col].y + 1.0f) * 0.5f * HEIGHT * vars->zoom;
-	p0.color = vertex[row][col].color;
+	p0.x = vars->vec[offset].x * s[0] + WIDTH * 0.5f;
+	p0.y = vars->vec[offset].y * s[1] + HEIGHT * 0.5f;
+	p0.color = vars->vtx[offset].color;
 	if (col + 1 < vars->cols)
 	{
-		p1.x = (vector[row][col + 1].x + 1.0f) * 0.5f * WIDTH * vars->zoom;
-		p1.y = (vector[row][col + 1].y + 1.0f) * 0.5f * HEIGHT * vars->zoom;
-		p1.color = vertex[row][col + 1].color;
+		p1.x = vars->vec[index[0]].x * s[0] + WIDTH * 0.5f;
+		p1.y = vars->vec[index[0]].y * s[1] + HEIGHT * 0.5f;
+		p1.color = vars->vtx[index[0]].color;
 		dline_float(vars->img, p0, p1);
 	}
 	if (row + 1 < vars->rows)
 	{
-		p1.x = (vector[row + 1][col].x + 1.0f) * 0.5f * WIDTH * vars->zoom;
-		p1.y = (vector[row + 1][col].y + 1.0f) * 0.5f * HEIGHT * vars->zoom;
-		p1.color = vertex[row + 1][col].color;
+		p1.x = vars->vec[index[1]].x * s[0] + WIDTH * 0.5f;
+		p1.y = vars->vec[index[1]].y * s[1] + HEIGHT * 0.5f;
+		p1.color = vars->vtx[index[1]].color;
 		dline_float(vars->img, p0, p1);
 	}
 }
 
-// Could pre-compute neighbour pairs for better cache prediction and eliminate branching
-// Total number of pairs = (rows - 1) * cols + (cols - 1) * rows
-// = 2 rows*cols - rows - cols
-void	draw_lines(t_vars *vars)
+static
+void	apply_transform(t_vars *vars, t_vec4 *v, t_params params)
+{
+	size_t			i;
+	t_vec3			tmp;
+	const t_vec3	vcos = {cosf(params.rx), cosf(params.ry), cosf(params.rz)};
+	const t_vec3	vsin = {sinf(params.rx), sinf(params.ry), sinf(params.rz)};
+	const t_mat4	mat = {{
+	{vcos.z * vcos.y, -vsin.z * vcos.y, vsin.y, params.dx},
+	{vcos.z * vsin.y * vsin.x + vsin.z * vcos.x, -vsin.z * vsin.y * vsin.x
+		+ vcos.z * vcos.x, -vcos.y * vsin.x, params.dy},
+	{-vcos.z * vsin.y * vcos.x + vsin.z * vsin.x, vsin.z * vsin.y * vcos.x
+		+ vcos.z * vsin.x, vcos.y * vcos.x, params.dz},
+	{0, 0, 0, 1}}};
+
+	i = 0;
+	while (i < vars->length)
+	{
+		tmp.x = mat.a1 * v[i].x + mat.a2 * v[i].y + mat.a3 * v[i].z + mat.a4;
+		tmp.y = mat.b1 * v[i].x + mat.b2 * v[i].y + mat.b3 * v[i].z + mat.b4;
+		tmp.z = mat.c1 * v[i].x + mat.c2 * v[i].y + mat.c3 * v[i].z + mat.c4;
+		v[i].x = tmp.x;
+		v[i].y = tmp.y;
+		v[i].z = tmp.z;
+		i++;
+	}
+}
+
+void	fdf_render_frame(t_vars *vars)
 {
 	size_t	row;
 	size_t	col;
 
+	ft_bzero(vars->img->data, HEIGHT * WIDTH * sizeof(int32_t));
+	apply_transform(vars, vars->vec, vars->params);
 	row = 0;
 	while (row < vars->rows)
 	{
@@ -93,4 +118,5 @@ void	draw_lines(t_vars *vars)
 		}
 		row++;
 	}
+	mlx_put_image_to_window(vars->mlx, vars->mlx->win_list, vars->img, 0, 0);
 }
