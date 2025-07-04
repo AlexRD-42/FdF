@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:58:18 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 17:57:42 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/04 10:57:13 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@
 
 uint8_t	fdf_read(t_vars *vars, const char *filename, const char *charset);
 uint8_t	fdf_init(t_vars *vars, const char *filename, const char *charset);
-void	fdf_create_vector(t_vars *vars);
 void	fdf_render_frame(t_vars *vars);
 void	draw_neighbours(t_vars *vars, size_t row, size_t col);
 
+void	fdf_reset(t_vars *vars);
 void	fdf_preset1(t_vars *vars);
 void	fdf_preset2(t_vars *vars);
 void	fdf_preset3(t_vars *vars);

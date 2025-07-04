@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 11:14:04 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 17:58:53 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/04 12:32:21 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,15 @@ typedef struct s_keys
 	uint8_t	a;
 	uint8_t	s;
 	uint8_t	d;
+	uint8_t	q;
+	uint8_t	e;
 	uint8_t	up;
 	uint8_t	down;
 	uint8_t	left;
 	uint8_t	right;
-	uint8_t	q;
-	uint8_t	e;
 	uint8_t	rmb;
 	uint8_t	lmb;
+	uint8_t	shift;
 }	t_keys;
 
 typedef struct s_mouse
@@ -58,7 +59,6 @@ typedef struct s_vars
 	t_img		*img;
 	t_vtx		*vtx;
 	t_vec4		*vec;
-	t_vec3		rot;
 	t_params	params;
 	size_t		length;
 	int32_t		max;

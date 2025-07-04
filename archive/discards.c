@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 12:51:33 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 17:58:42 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/04 12:30:35 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,58 @@ t_mat4	build_mvpmatrix(t_params p, t_frustrum f)
 		{v2.y * (vc.z * vs.y * vs.x + vs.z * vc.x), v2.y * (-vs.z * vs.y * vs.x + vc.z * vc.x), v2.y * (-vc.y * vs.x), v2.y * p.dy},
 		{v2.z * v1.y, v2.z * v1.z, v2.z * v1.w, v2.z * p.dz + v2.w},
 		{-v1.y, -v1.z, -v1.w, -p.dz}}});
+}
+
+static
+void	dline_float(t_img *img, t_vtx p0, t_vtx p1)
+{
+	const uint32_t	length = ft_iabsmax((p1.x - p0.x), (p1.y - p0.y));
+	const float		dx = (double)(p1.x - p0.x) / (double)length;
+	const float		dy = (double)(p1.y - p0.y) / (double)length;
+	uint32_t		i;
+	t_vec2			vec;
+
+	i = 0;
+	vec.x = p0.x;
+	vec.y = p0.y;
+	while (i <= length)
+	{
+		if (vec.x >= 0.0f && vec.y >= 0.0f && vec.x < WIDTH && vec.y < HEIGHT)
+			putrgb(img, vec.x, vec.y, p0.color);
+		vec.x += dx;
+		vec.y += dy;
+		i++;
+	}
+}
+
+static
+void	draw_line(t_img *img, t_vtx p0, t_vtx p1)
+{
+	const t_vtx2	delta = {ft_iabs(p1.x - p0.x), ft_iabs(p1.y - p0.y)};
+	const int32_t	sx = (p0.x < p1.x) - (p0.x >= p1.x);
+	const int32_t	sy = (p0.y < p1.y) - (p0.y >= p1.y);
+	int32_t			err;
+	int32_t			e2;
+
+	err = delta.x - delta.y;
+	while (1)
+	{
+		if (p0.x >= 0 && p0.y >= 0 && p0.x < WIDTH && p0.y < HEIGHT)
+			putrgb(img, p0.x, p0.y, p0.color);
+		if (p0.x == p1.x && p0.y == p1.y)
+			break ;
+		e2 = err * 2;
+		if (e2 > -delta.y)
+		{
+			err -= delta.y;
+			p0.x += sx;
+		}
+		if (e2 < delta.x)
+		{
+			err += delta.x;
+			p0.y += sy;
+		}
+	}
 }
 
 // static

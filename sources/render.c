@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 17:56:46 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 18:10:23 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/04 11:26:48 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
 #include "fdf.h"
 
 static
-void	apply_transform(t_vars *vars, t_vec4 *v, t_params params)
+void	apply_transform(t_vars *vars, t_vec4 *v, t_vtx *vt, t_params params)
 {
 	size_t			i;
-	t_vec3			tmp;
+	float			tmp_z;
 	const t_vec3	vcos = {cosf(params.rx), cosf(params.ry), cosf(params.rz)};
 	const t_vec3	vsin = {sinf(params.rx), sinf(params.ry), sinf(params.rz)};
-	const t_mat4	mat = {{
+	const t_mat4	m = {{
 	{vcos.z * vcos.y, -vsin.z * vcos.y, vsin.y, params.dx},
 	{vcos.z * vsin.y * vsin.x + vsin.z * vcos.x, -vsin.z * vsin.y * vsin.x
 		+ vcos.z * vcos.x, -vcos.y * vsin.x, params.dy},
@@ -33,12 +33,10 @@ void	apply_transform(t_vars *vars, t_vec4 *v, t_params params)
 	i = 0;
 	while (i < vars->length)
 	{
-		tmp.x = mat.a1 * v[i].x + mat.a2 * v[i].y + mat.a3 * v[i].z + mat.a4;
-		tmp.y = mat.b1 * v[i].x + mat.b2 * v[i].y + mat.b3 * v[i].z + mat.b4;
-		tmp.z = mat.c1 * v[i].x + mat.c2 * v[i].y + mat.c3 * v[i].z + mat.c4;
-		v[i].x = tmp.x;
-		v[i].y = tmp.y;
-		v[i].z = tmp.z;
+		tmp_z = vt[i].zf * vars->params.zscale;
+		v[i].x = m.a1 * vt[i].xf + m.a2 * vt[i].yf + m.a3 * tmp_z + m.a4;
+		v[i].y = m.b1 * vt[i].xf + m.b2 * vt[i].yf + m.b3 * tmp_z + m.b4;
+		v[i].z = m.c1 * vt[i].xf + m.c2 * vt[i].yf + m.c3 * tmp_z + m.c4;
 		i++;
 	}
 }
@@ -52,65 +50,41 @@ void	draw_cols(t_vars *vars, size_t row, uint8_t mode)
 	{
 		col = 0;
 		while (col < vars->cols)
-		{
-			draw_neighbours(vars, row, col);
-			col++;
-		}
+			draw_neighbours(vars, row, col++);
 	}
 	else
 	{
 		col = vars->cols;
 		while (col > 0)
-		{
-			col--;
-			draw_neighbours(vars, row, col);
-		}
+			draw_neighbours(vars, row, --col);
 	}
 }
 
 static
-void	draw_rows(t_vars *vars, uint8_t mode1, uint8_t mode2)
+void	draw_rows(t_vars *vars, const float rz)
 {
-	size_t	row;
+	size_t			row;
+    const uint8_t	row_fwd = sinf(rz) >= 0.0f;
+    const uint8_t	col_fwd = cosf(rz) >= 0.0f;
 
-	if (mode1 == 0)
+	if (row_fwd)
 	{
 		row = 0;
 		while (row < vars->rows)
-		{
-			draw_cols(vars, row, mode2);
-			row++;
-		}
+			draw_cols(vars, row++, col_fwd);
 	}
 	else
 	{
 		row = vars->rows;
 		while (row > 0)
-		{
-			row--;
-			draw_cols(vars, row, mode2);
-		}
+			draw_cols(vars, --row, col_fwd);
 	}
-}
-
-void	update_rstate(t_vars *vars)
-{
-	vars->rot.x += vars->params.rx;
-	vars->rot.y += vars->params.ry;
-	vars->rot.z += vars->params.rz;
-	if (vars->rot.x > PI || vars->rot.x < PI)
-		vars->rot.x = 0.0f;
-	if (vars->rot.y > PI || vars->rot.y < PI)
-		vars->rot.y = 0.0f;
-	if (vars->rot.z > PI || vars->rot.z < PI)
-		vars->rot.z = 0.0f;
 }
 
 void	fdf_render_frame(t_vars *vars)
 {
-	update_rstate(vars);
 	ft_bzero(vars->img->data, HEIGHT * WIDTH * sizeof(int32_t));
-	apply_transform(vars, vars->vec, vars->params);
-	draw_rows(vars, 1, 0);
+	apply_transform(vars, vars->vec, vars->vtx, vars->params);
+	draw_rows(vars, fabsf(vars->params.rz));
 	mlx_put_image_to_window(vars->mlx, vars->mlx->win_list, vars->img, 0, 0);
 }

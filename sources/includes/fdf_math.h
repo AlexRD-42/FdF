@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 12:51:22 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 11:08:35 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:23:58 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,29 @@
 
 # define PI 3.141592653589793238462643383279502884L
 
-typedef struct s_vertex
+typedef struct u_delta
 {
-	int32_t		x;
-	int32_t		y;
-	int32_t		z;
+	float		x;
+	float		y;
 	uint32_t	color;
+}	t_delta;
+
+typedef union u_vertex
+{
+	struct
+	{
+		int32_t		x;
+		int32_t		y;
+		int32_t		z;
+		uint32_t	color;
+	};
+	struct
+	{
+		float		xf;
+		float		yf;
+		float		zf;
+		float		wf;
+	};
 }	t_vtx;
 
 typedef union u_vec2

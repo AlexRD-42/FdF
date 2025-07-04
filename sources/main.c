@@ -6,38 +6,39 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 10:24:50 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/04 10:05:57 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/04 12:34:05 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <math.h>
 #include <fdf_utils.h>
 #include "fdf.h"
+
+static
+void	clamp(t_vars *vars)
+{
+	if (fabsf(vars->params.rx) >= 2 * PI)
+		vars->params.rx = 0.0f;
+	if (fabsf(vars->params.ry) >= 2 * PI)
+		vars->params.ry = 0.0f;
+	if (fabsf(vars->params.rz) >= 2 * PI)
+		vars->params.rz = 0.0f;
+}
 
 int	cmlx_loop(t_vars *vars)
 {
 	static const float	vtbl[2] = {0.0f, 0.03125f};
 
-	if (vars->keys.lmb == 0 && vars->keys.rmb == 0)
-	{
-		vars->params.rx = vtbl[vars->keys.w] - vtbl[vars->keys.s];
-		vars->params.ry = vtbl[vars->keys.e] - vtbl[vars->keys.q];
-		vars->params.rz = vtbl[vars->keys.d] - vtbl[vars->keys.a];
-		vars->params.dx = vtbl[vars->keys.right] - vtbl[vars->keys.left];
-		vars->params.dy = vtbl[vars->keys.down] - vtbl[vars->keys.up];
-		vars->params.dz = 0.0f;
-	}
-	else
-	{
-		vars->params.rx *= 0.5f;
-		vars->params.ry *= 0.5f;
-		vars->params.rz = 0.0f;
-		vars->params.dx *= 0.5f;
-		vars->params.dy *= 0.5f;
-		vars->params.dz = 0.0f;
-	}
+	vars->params.rx += vtbl[vars->keys.w] - vtbl[vars->keys.s];
+	vars->params.ry += vtbl[vars->keys.e] - vtbl[vars->keys.q];
+	vars->params.rz += vtbl[vars->keys.d] - vtbl[vars->keys.a];
+	vars->params.dx += vtbl[vars->keys.right] - vtbl[vars->keys.left];
+	vars->params.dy += vtbl[vars->keys.down] - vtbl[vars->keys.up];
+	vars->params.dz += 0.0f;
+	clamp(vars);
 	fdf_render_frame(vars);
 	return (0);
 }

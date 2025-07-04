@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:13:44 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 17:59:21 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/04 10:45:30 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,9 @@ uint8_t	cmlx_error(t_vars *vars, uint8_t error_code)
 }
 
 static
-void	fdf_reset_params(t_vars *vars)
+void	fdf_init_params(t_vars *vars)
 {
-	vars->params.rx = PI / 6;
-	vars->params.ry = 0.0f;
-	vars->params.rz = -PI / 6;
-	vars->params.dx = 0.0f;
-	vars->params.dy = 0.0f;
-	vars->params.dz = 0.0f;
-	vars->params.zoom = 0.5f;
-	vars->params.zscale = 1.0f;
-	vars->keys.rmb = 0;
-	vars->keys.lmb = 0;
+	fdf_reset(vars);
 	vars->keys.w = 0;
 	vars->keys.a = 0;
 	vars->keys.s = 0;
@@ -75,12 +66,12 @@ void	fdf_reset_params(t_vars *vars)
 	vars->keys.down = 0;
 	vars->keys.left = 0;
 	vars->keys.right = 0;
-	vars->rot.x = 0.0f;
-	vars->rot.y = 0.0f;
-	vars->rot.z = 0.0f;
+	vars->keys.rmb = 0;
+	vars->keys.lmb = 0;
 }
 
-void	fdf_create_vector(t_vars *vars)
+static
+void	fdf_normalize(t_vars *vars)
 {
 	size_t		i;
 	const float	invx = 2.0f / (vars->cols - 1);
@@ -90,10 +81,9 @@ void	fdf_create_vector(t_vars *vars)
 	i = 0;
 	while (i < vars->length)
 	{
-		vars->vec[i].x = vars->vtx[i].x * invx - 1.0f;
-		vars->vec[i].y = vars->vtx[i].y * invy - 1.0f;
-		vars->vec[i].z = (vars->vtx[i].z - vars->min) * invz - 1.0f;
-		vars->vec[i].w = 0.0f;
+		vars->vtx[i].xf = vars->vtx[i].x * invx - 1.0f;
+		vars->vtx[i].yf = vars->vtx[i].y * invy - 1.0f;
+		vars->vtx[i].zf = (vars->vtx[i].z - vars->min) * invz - 1.0f;
 		i++;
 	}
 }
@@ -112,8 +102,8 @@ uint8_t	fdf_init(t_vars *vars, const char *filename, const char *charset)
 	if (vars->mlx->win_list == NULL)
 		return (cmlx_error(vars, 2));
 	fdf_hooks(vars);
-	fdf_reset_params(vars);
-	fdf_create_vector(vars);
+	fdf_init_params(vars);
+	fdf_normalize(vars);
 	mlx_loop(vars->mlx);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 09:34:26 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 17:09:40 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/04 12:15:54 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	cmlx_keydown(int keycode, t_vars *vars)
 	if (keycode == XK_Escape)
 		return (mlx_loop_end(vars->mlx));
 	if (keycode == XK_r)
-		fdf_create_vector(vars);
+		fdf_reset(vars);
 	if (keycode == XK_1)
 		fdf_preset1(vars);
 	if (keycode == XK_2)
@@ -41,6 +41,7 @@ int	cmlx_keydown(int keycode, t_vars *vars)
 	vars->keys.down = (keycode == XK_Down);
 	vars->keys.left = (keycode == XK_Left);
 	vars->keys.right = (keycode == XK_Right);
+	vars->keys.shift = (keycode == XK_Shift_L);
 	return (0);
 }
 
@@ -57,6 +58,7 @@ int	cmlx_keyup(int keycode, t_vars *vars)
 	vars->keys.right &= (keycode != XK_Right);
 	vars->keys.q &= (keycode != XK_q);
 	vars->keys.e &= (keycode != XK_e);
+	vars->keys.shift &= (keycode != XK_Shift_L);
 	return (0);
 }
 
@@ -68,10 +70,20 @@ int	cmlx_mousedown(int button, int32_t ix, int32_t iy, t_vars *vars)
 	vars->keys.rmb = (button == 3);
 	vars->mouse.x = ix;
 	vars->mouse.y = iy;
-	if (button == 4)
-		vars->params.zoom += 0.1f;
-	else if (button == 5)
-		vars->params.zoom = ft_max(vars->params.zoom - 0.1f, 0.1f);
+	if (vars->keys.shift == 0)
+	{
+		if (button == 4)
+			vars->params.zoom += 0.1f;
+		else if (button == 5)
+			vars->params.zoom = ft_max(vars->params.zoom - 0.1f, 0.1f);
+	}
+	else
+	{
+		if (button == 4)
+			vars->params.zscale += 0.1f;
+		else if (button == 5)
+			vars->params.zscale = ft_max(vars->params.zscale - 0.1f, 0.1f);
+	}
 	return (0);
 }
 
@@ -90,13 +102,13 @@ int	cmlx_mousemove(int32_t ix, int32_t iy, t_vars *vars)
 {
 	if (vars->keys.lmb != 0)
 	{
-		vars->params.dx = (float)(ix - vars->mouse.x) / 128.0f;
-		vars->params.dy = (float)(iy - vars->mouse.y) / 128.0f;
+		vars->params.dx += (float)(ix - vars->mouse.x) / 256.0f;
+		vars->params.dy += (float)(iy - vars->mouse.y) / 256.0f;
 	}
 	else if (vars->keys.rmb != 0)
 	{
-		vars->params.ry = -(float)(ix - vars->mouse.x) / 128.0f;
-		vars->params.rx = -(float)(iy - vars->mouse.y) / 128.0f;
+		vars->params.ry += -(float)(ix - vars->mouse.x) / 256.0f;
+		vars->params.rx += -(float)(iy - vars->mouse.y) / 256.0f;
 	}
 	vars->mouse.x = ix;
 	vars->mouse.y = iy;
