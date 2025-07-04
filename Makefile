@@ -1,17 +1,17 @@
 # Configuration ------------------------------- #
 NAME = fdf
-INC_PATH = sources/includes libraries/mlx
+INC_PATH = sources/includes $(HOME)/mlx
 OBJ_PATH = sources/obj
 VPATH = sources sources/utils
 
 # Files --------------------------------------- #
-LIBS = libraries/mlx/libmlx_Linux.a
+LIBS = $(HOME)/mlx/libmlx_Linux.a
 SRCS = main.c fdf_init.c fdf_read.c fdf_presets.c events.c draw.c render.c \
 float_limits.c int_limits.c read_utils.c
 
 # Flags --------------------------------------- #
-CC = cc
-CFLAGS = -Wall -Wextra $(addprefix -I,$(INC_PATH)) -fstrict-aliasing -lXext -lX11 -lm -lz
+CC = gcc-13
+CFLAGS = -Wall -Wextra $(addprefix -I,$(INC_PATH)) -flto -fstrict-aliasing -lXext -lX11 -lm -lz
 DEBUG = -g -Wpedantic -Wcast-qual -Wfloat-equal -Wswitch-default -Wduplicated-branches -Wduplicated-cond -pg
 SANITIZERS = -fsanitize=address,undefined,leak -fno-omit-frame-pointer
 FAST = -march=native -O3 -ffast-math

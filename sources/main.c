@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 10:24:50 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/03 17:49:22 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/04 10:05:57 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	main(int argc, char **argv)
 
 	// if (argc != 2)
 	// 	return (1);
-	if (fdf_init(&vars, "archive/maps/t2.fdf", " \n"))
+	if (fdf_init(&vars, "maps/t2.fdf", " \n"))
 		return (1);
 	// if (fdf_init(&vars, argv[1], " \n"))
 	// 	return (1);

@@ -3,6 +3,4 @@
 *.a
 *.o
 obj/
-fdf
-main
 *.out
