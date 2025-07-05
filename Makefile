@@ -15,7 +15,7 @@ OBJS = $(addprefix $(OBJ_PATH)/, $(SRCS:.c=.o))
 CC = clang
 CFLAGS = -Wall -Wextra $(addprefix -I,$(INC_PATH)) -flto -fstrict-aliasing
 LFLAGS = -lXext -lX11 -lm -lz
-DEBUG = -g -Wpedantic -Wcast-qual -Wfloat-equal -Wswitch-default -pg
+DEBUG = -g -Wpedantic -Wcast-qual -Wfloat-equal -Wswitch-default
 SANITIZERS = -fsanitize=address,undefined,leak -fno-omit-frame-pointer
 FAST = -march=native -O3 -ffast-math
 

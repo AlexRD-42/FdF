@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:58:18 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/04 10:57:13 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/05 12:36:08 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include <stdint.h>
 # include <stddef.h>
-# include "cmlx.h"
 # include "fdf_structs.h"
 
 # define WIDTH 1600

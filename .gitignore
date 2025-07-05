@@ -1,7 +1,6 @@
-.vscode/
+.cache
+build
 *.exe
 *.a
 *.o
-obj/
 *.out
-.cache

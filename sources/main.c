@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 10:24:50 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/05 11:47:32 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/05 12:38:06 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ int	cmlx_loop(t_vars *vars)
 	static const float	vtbl[2] = {0.0f, 0.03125f};
 
 	vars->params.rx += vtbl[vars->keys.w] - vtbl[vars->keys.s];
-	vars->params.ry += vtbl[vars->keys.e] - vtbl[vars->keys.q];
-	vars->params.rz += vtbl[vars->keys.d] - vtbl[vars->keys.a];
+	vars->params.ry += vtbl[vars->keys.d] - vtbl[vars->keys.a];
+	vars->params.rz += vtbl[vars->keys.e] - vtbl[vars->keys.q];
 	vars->params.dx += vtbl[vars->keys.right] - vtbl[vars->keys.left];
 	vars->params.dy += vtbl[vars->keys.down] - vtbl[vars->keys.up];
 	vars->params.dz += 0.0f;
