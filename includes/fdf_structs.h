@@ -47,12 +47,6 @@ typedef struct s_keys
 	uint8_t	shift;
 }	t_keys;
 
-typedef struct s_mouse
-{
-	int32_t	x;
-	int32_t	y;
-}	t_mouse;
-
 typedef struct s_vars
 {
 	t_xvar		*mlx;
@@ -60,13 +54,12 @@ typedef struct s_vars
 	t_vtx		*vtx;
 	t_vec4		*vec;
 	t_params	params;
+	t_keys		keys;
 	size_t		length;
 	int32_t		max;
 	int32_t		min;
 	uint32_t	rows;
 	uint32_t	cols;
-	t_keys		keys;
-	t_mouse		mouse;
 }	t_vars;
 
 #endif

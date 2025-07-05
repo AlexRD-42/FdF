@@ -34,8 +34,9 @@ void	fdf_preset4(t_vars *vars);
 int		cmlx_loop(t_vars *vars);
 int		cmlx_keydown(int keycode, t_vars *vars);
 int		cmlx_keyup(int keycode, t_vars *vars);
-int		cmlx_mousedown(int button, int32_t ix, int32_t iy, t_vars *vars);
-int		cmlx_mouseup(int button, int32_t ix, int32_t iy, t_vars *vars);
-int		cmlx_mousemove(int32_t ix, int32_t iy, t_vars *vars);
+int		cmlx_mousedown(int button, int32_t x, int32_t y, t_vars *vars);
+int		cmlx_mouseup(int button, int32_t x, int32_t y, t_vars *vars);
+int		cmlx_mousemove(int32_t x1, int32_t y1, t_vars *vars);
+
 
 #endif

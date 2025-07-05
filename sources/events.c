@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 09:34:26 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/05 12:47:22 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/05 13:27:22 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,10 @@ int	cmlx_keyup(int keycode, t_vars *vars)
 
 // 4 ButtonPress
 // 12345 = LMB MMB RMB WHEELUP WHEELDOWN
-int	cmlx_mousedown(int button, int32_t ix, int32_t iy, t_vars *vars)
+int	cmlx_mousedown(int button, int32_t x, int32_t y, t_vars *vars)
 {
 	vars->keys.lmb = (button == 1);
 	vars->keys.rmb = (button == 3);
-	vars->mouse.x = ix;
-	vars->mouse.y = iy;
 	if (vars->keys.shift == 0)
 	{
 		if (button == 4)
@@ -84,33 +82,38 @@ int	cmlx_mousedown(int button, int32_t ix, int32_t iy, t_vars *vars)
 		else if (button == 5)
 			vars->params.zscale = ft_max(vars->params.zscale - 0.1f, 0.1f);
 	}
+	(void) x;
+	(void) y;
 	return (0);
 }
 
 // 5 ButtonRelease
-int	cmlx_mouseup(int button, int32_t ix, int32_t iy, t_vars *vars)
+int	cmlx_mouseup(int button, int32_t x, int32_t y, t_vars *vars)
 {
 	vars->keys.lmb &= (button != 1);
 	vars->keys.rmb &= (button != 3);
-	vars->mouse.x = ix;
-	vars->mouse.y = iy;
+	(void) x;
+	(void) y;
 	return (0);
 }
 
 // 6 MotionNotify
-int	cmlx_mousemove(int32_t ix, int32_t iy, t_vars *vars)
+int	cmlx_mousemove(int32_t x1, int32_t y1, t_vars *vars)
 {
+	static int32_t	x0 = 0;
+	static int32_t	y0 = 0;
+
 	if (vars->keys.lmb != 0)
 	{
-		vars->params.dx += (float)(ix - vars->mouse.x) / 256.0f;
-		vars->params.dy += (float)(iy - vars->mouse.y) / 256.0f;
+		vars->params.dx += (float)(x1 - x0) / 256.0f;
+		vars->params.dy += (float)(y1 - y0) / 256.0f;
 	}
 	else if (vars->keys.rmb != 0)
 	{
-		vars->params.ry += -(float)(ix - vars->mouse.x) / 256.0f;
-		vars->params.rx += -(float)(iy - vars->mouse.y) / 256.0f;
+		vars->params.rz += -(float)(x1 - x0) / 256.0f;
+		vars->params.rx += -(float)(y1 - y0) / 256.0f;
 	}
-	vars->mouse.x = ix;
-	vars->mouse.y = iy;
+	x0 = x1;
+	y0 = y1;
 	return (0);
 }

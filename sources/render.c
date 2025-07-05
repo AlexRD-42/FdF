@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 17:56:46 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/05 12:39:32 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/05 13:16:32 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,50 +41,23 @@ void	apply_transform(t_vars *vars, t_vec4 *v, t_vtx *vt, t_params params)
 	}
 }
 
-static
-void	draw_cols(t_vars *vars, size_t row, uint8_t mode)
+void	fdf_render_frame(t_vars *vars)
 {
+	size_t	row;
 	size_t	col;
 
-	if (mode == 0)
+	ft_bzero(vars->img->data, HEIGHT * WIDTH * sizeof(int32_t));
+	apply_transform(vars, vars->vec, vars->vtx, vars->params);
+	row = 0;
+	while (row < vars->rows)
 	{
 		col = 0;
 		while (col < vars->cols)
-			draw_neighbours(vars, row, col++);
+		{
+			draw_neighbours(vars, row, col);
+			col++;
+		}
+		row++;
 	}
-	else
-	{
-		col = vars->cols;
-		while (col > 0)
-			draw_neighbours(vars, row, --col);
-	}
-}
-
-static
-void	draw_rows(t_vars *vars, const float rz)
-{
-	size_t			row;
-    const uint8_t	row_fwd = sinf(rz) >= 0.0f;
-    const uint8_t	col_fwd = cosf(rz) >= 0.0f;
-
-	if (row_fwd)
-	{
-		row = 0;
-		while (row < vars->rows)
-			draw_cols(vars, row++, col_fwd);
-	}
-	else
-	{
-		row = vars->rows;
-		while (row > 0)
-			draw_cols(vars, --row, col_fwd);
-	}
-}
-
-void	fdf_render_frame(t_vars *vars)
-{
-	ft_bzero(vars->img->data, HEIGHT * WIDTH * sizeof(int32_t));
-	apply_transform(vars, vars->vec, vars->vtx, vars->params);
-	draw_rows(vars, fabsf(vars->params.rz));
 	mlx_put_image_to_window(vars->mlx, vars->mlx->win_list, vars->img, 0, 0);
 }
